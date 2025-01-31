@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: bunyakorngoko/mern-app-frontend:latest    # เปลี่ยนเป็นชื่อ image ของ frontend
+        ports:
+        - containerPort: 80
+        env:
+        - name: VITE_API_URL
+          value: "http://192.168.49.2:31234/api"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 32000 
+  type: NodePort
